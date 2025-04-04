@@ -1,5 +1,6 @@
 package com.example.mui4.presentation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,10 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mui4.data.Contact
+import com.example.mui4.data.formatDateWithYear
 
 @Composable
 fun BillingsScreen(paddingValues: PaddingValues, dataSet1: List<Contact>, dataSet2: List<Contact>) {
@@ -30,9 +35,11 @@ fun BillingsScreen(paddingValues: PaddingValues, dataSet1: List<Contact>, dataSe
         mutableStateOf(dataSet1)
     }
     var currentSelectedContact by remember { mutableStateOf<Contact?>(null) }
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(paddingValues)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(
                 text = "Billings",
@@ -52,13 +59,21 @@ fun BillingsScreen(paddingValues: PaddingValues, dataSet1: List<Contact>, dataSe
         }
         Spacer(modifier = Modifier.height(16.dp))
         BillingsList(dataSet = currentDataSet, onContactSelected = { currentSelectedContact = it })
+        if (currentSelectedContact != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            HorizontalDivider(modifier = Modifier.fillMaxWidth(0.65f).align(Alignment.CenterHorizontally) )
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+        AnimatedVisibility(visible = currentSelectedContact != null) {
+            ContactDetails(currentSelectedContact!!)
+        }
     }
 }
 
 @Composable
 fun BillingsList(dataSet: List<Contact>, onContactSelected: (Contact) -> Unit) {
     val state = rememberLazyListState()
-    LazyColumn(modifier = Modifier.fillMaxWidth(), state = state) {
+    LazyColumn(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp), state = state) {
         items(count = dataSet.size) { itemIndex ->
             val currentItem = dataSet[itemIndex]
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -66,6 +81,7 @@ fun BillingsList(dataSet: List<Contact>, onContactSelected: (Contact) -> Unit) {
                     text = currentItem.phoneNumber,
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.clickable { onContactSelected(currentItem) })
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
@@ -73,10 +89,12 @@ fun BillingsList(dataSet: List<Contact>, onContactSelected: (Contact) -> Unit) {
 
 @Composable
 fun ContactDetails(contact: Contact) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Name: ${contact.credentials.name}")
-        Text(text = "Surname: ${contact.credentials.surname}")
-        Text(text = "Billing starts : ${contact.startDate}")
-        Text(text = "Billing ends : ${contact.endDate}")
+    val formattedStartDate = contact.startDate.formatDateWithYear()
+    val formattedEndDate = contact.endDate.formatDateWithYear()
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(text = "Name: ${contact.credentials.name}",style = MaterialTheme.typography.bodyLarge,)
+        Text(text = "Surname: ${contact.credentials.surname}", style = MaterialTheme.typography.bodyLarge,)
+        Text(text = "Billing starts : $formattedStartDate", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
+        Text(text = "Billing ends : $formattedEndDate", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
     }
 }
