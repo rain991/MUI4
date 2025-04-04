@@ -62,7 +62,11 @@ fun BillingsScreen(paddingValues: PaddingValues, dataSet1: List<Contact>, dataSe
         BillingsList(dataSet = currentDataSet, onContactSelected = { currentSelectedContact = it })
         if (currentSelectedContact != null) {
             Spacer(modifier = Modifier.height(12.dp))
-            HorizontalDivider(modifier = Modifier.fillMaxWidth(0.65f).align(Alignment.CenterHorizontally) )
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth(0.65f)
+                    .align(Alignment.CenterHorizontally)
+            )
             Spacer(modifier = Modifier.height(12.dp))
         }
         AnimatedVisibility(visible = currentSelectedContact != null) {
@@ -74,7 +78,9 @@ fun BillingsScreen(paddingValues: PaddingValues, dataSet1: List<Contact>, dataSe
 @Composable
 fun BillingsList(dataSet: List<Contact>, onContactSelected: (Contact) -> Unit) {
     val state = rememberLazyListState()
-    LazyColumn(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp), state = state) {
+    LazyColumn(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 8.dp), state = state) {
         items(count = dataSet.size) { itemIndex ->
             val currentItem = dataSet[itemIndex]
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -92,13 +98,41 @@ fun BillingsList(dataSet: List<Contact>, onContactSelected: (Contact) -> Unit) {
 fun ContactDetails(contact: Contact) {
     val formattedStartDate = contact.startDate.formatDateWithYear()
     val formattedEndDate = contact.endDate.formatDateWithYear()
-    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(text = "Name: ${contact.credentials.name}",style = MaterialTheme.typography.bodyLarge,)
-        Text(text = "Surname: ${contact.credentials.surname}", style = MaterialTheme.typography.bodyLarge,)
-        Text(text = "Billing starts : $formattedStartDate", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
-        Text(text = "Billing ends : $formattedEndDate", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
-        if(contact.endDate.time < System.currentTimeMillis()){
-            Text(text = "Billing expired", style = MaterialTheme.typography.bodyLarge.copy(color = Color.Red, fontWeight = FontWeight.W600), textAlign = TextAlign.Center)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "Name: ${contact.credentials.name}",
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Text(
+            text = "Surname: ${contact.credentials.surname}",
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Text(
+            text = "Billing starts : $formattedStartDate",
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = "Billing ends : $formattedEndDate",
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
+        if (contact.endDate.time < System.currentTimeMillis()) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Text(
+                    text = "Billing expired",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = Color.Red,
+                        fontWeight = FontWeight.W600
+                    ),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
