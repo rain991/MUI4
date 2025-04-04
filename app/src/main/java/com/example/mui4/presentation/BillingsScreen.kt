@@ -86,7 +86,7 @@ fun BillingsList(dataSet: List<Contact>, onContactSelected: (Contact) -> Unit) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = currentItem.phoneNumber,
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.clickable { onContactSelected(currentItem) })
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -106,27 +106,27 @@ fun ContactDetails(contact: Contact) {
     ) {
         Text(
             text = "Name: ${contact.credentials.name}",
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
         )
         Text(
             text = "Surname: ${contact.credentials.surname}",
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
         )
         Text(
             text = "Billing starts : $formattedStartDate",
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
         Text(
             text = "Billing ends : $formattedEndDate",
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
         if (contact.endDate.time < System.currentTimeMillis()) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Text(
                     text = "Billing expired",
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.titleLarge.copy(
                         color = Color.Red,
                         fontWeight = FontWeight.W600
                     ),
