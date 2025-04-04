@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -91,10 +92,13 @@ fun BillingsList(dataSet: List<Contact>, onContactSelected: (Contact) -> Unit) {
 fun ContactDetails(contact: Contact) {
     val formattedStartDate = contact.startDate.formatDateWithYear()
     val formattedEndDate = contact.endDate.formatDateWithYear()
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(text = "Name: ${contact.credentials.name}",style = MaterialTheme.typography.bodyLarge,)
         Text(text = "Surname: ${contact.credentials.surname}", style = MaterialTheme.typography.bodyLarge,)
         Text(text = "Billing starts : $formattedStartDate", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
         Text(text = "Billing ends : $formattedEndDate", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
+        if(contact.endDate.time < System.currentTimeMillis()){
+            Text(text = "Billing expired", style = MaterialTheme.typography.bodyLarge.copy(color = Color.Red, fontWeight = FontWeight.W600), textAlign = TextAlign.Center)
+        }
     }
 }
